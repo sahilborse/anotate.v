@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title style="color: green;">Anotate</title>
+    <style>
+        /* General body styling */
+        body {
+            background-color: #f9f9f9;  /* Light background for better readability */
+            font-family: Arial, sans-serif;
+        }
+
+        /* Main container styling */
+        .container {
+            text-align: center;
+            margin: 100px auto;
+            max-width: 500px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Heading styling */
+        h1 {
+            color: purple;
+            font-weight: bold;
+        }
+
+        /* Image styling */
+        img {
+            width: 60%;
+            margin-bottom: 20px; /* Space between GIF and buttons */
+        }
+
+        /* Button styling */
+        .btn-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            text-decoration: none; /* Remove underline for links */
+        }
+
+        /* Button hover effects */
+        .btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* Responsive design */
+        @media (max-width: 500px) {
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Page heading -->
+        <h1>Welcome to Anotation</h1>
+        
+        <!-- Animated GIF -->
+        <img src="https://i.ibb.co/RNB6jpM/welcome.gif" alt="Welcome Cartoon">
+
+        <!-- Button container -->
+        <div class="btn-container">
+            <a href="/login" class="btn">Login</a>
+            <a href="/register" class="btn">Register</a>
+        </div>
+    </div>
+</body>
+</html>
