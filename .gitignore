@@ -1,0 +1,54 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables
+.env
+
+# Django-specific
+db.sqlite3
+*.log
+*.pot
+*.pyc
+*.pyo
+*.sqlite3
+*.pyd
+
+# Media and static files
+/static/
+/media/
+
+# Virtual environment
+venv/
+env/
+.virtualenv/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*~
+*.sublime-workspace
+*.sublime-project
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Node.js dependencies (if using npm/yarn for frontend)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Coverage reports
+htmlcov/
+.coverage
+.tox/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+
+# Migrations (optional: exclude migration files)
+*/migrations/*.py
+!*/migrations/__init__.py
