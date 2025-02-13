@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+   
     <style>
         /* General Body Styling */
         body {
@@ -69,6 +70,13 @@
             border-color: #007bff;
             box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
         }
+        
+        .highlighted-text {
+            background-color: yellow;
+            font-weight: bold;
+            border-radius: 4px;
+            padding: 2px;
+        }
 
         /* Submit Button */
         button {
@@ -109,10 +117,13 @@
                 <tbody>
                     {% for title in titles %}
                     <tr>
-                        <td>
-                            {{ title.title }}
-                            <input type="hidden" name="title[]" value="{{ title.id }}">
+                        <td class="title-cell" data-title-id="{{ title.id }}">
+                            <span class="text-content">{{ title.title }}</span>
                         </td>
+                        <!---<td>-->
+                            <!-- {{ title.title }} -->
+                            <input type="hidden" name="title[]" value="{{ title.id }}">
+                        <!--</td>-->
                         <td>
                             <select name="annotate[]">
                                 <option value="-1">Negative</option>
@@ -172,13 +183,159 @@
 
         const formData = new FormData(this);
 
-        // Display form data in the console or send it to the server via AJAX
+       
         console.log([...formData.entries()]);
 
-        // Here, you can make an AJAX request to send data to the server
-        // Example: using Fetch API or jQuery AJAX for form submission
     });
+</script>
+<script>
+   document.querySelectorAll(".title-cell").forEach(cell => {
+    cell.addEventListener("mouseup", () => {
+        let selection = window.getSelection();
+        let selectedText = selection.toString().trim();
+        let titleId = cell.getAttribute("data-title-id");
+
+        if (selectedText.length > 0) {
+            let range = selection.getRangeAt(0);
+            let span = document.createElement("span");
+            span.classList.add("highlighted-text");
+            span.textContent = selectedText;
+
+            range.deleteContents();
+            range.insertNode(span);
+
+            let form = document.getElementById("questionForm");
+
+            // Create a hidden input for storing selected text along with title ID
+            let hiddenInput = document.createElement("input");
+            hiddenInput.type = "hidden";
+            hiddenInput.name = "selected_text[]";  // Treat as an array
+            hiddenInput.value = JSON.stringify({ title_id: titleId, text: selectedText });
+
+            form.appendChild(hiddenInput);
+        }
+    });
+});
+
 </script>
 
 </body>
 </html>
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+ 
+
+        .container {
+            margin-top: 40px;
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #007bff;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+
+        th {
+            color: #fff;
+            background-color: #007bff;
+            padding: 12px;
+            text-align: left;
+            border-radius: 8px 8px 0 0;
+        }
+
+        td {
+            background-color: #f4f4f4;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: text;
+            position: relative;
+        }
+
+
+        button {
+            background-color: #007bff;
+            border: none;
+            padding: 12px;
+            color: #fff;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            width: 100%;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <title>Text Selection Highlighter</title>
+</head>
+<body>
+
+<div class="container">
+    <div class="form-container">
+        <h2>Answer the Questions</h2>
+
+        <form method="post" id="questionForm">
+            {% csrf_token %}
+
+            <table id="questionsTable">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Annotation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for title in titles %}
+                    <tr>
+                        <input class="title-id" type="hidden" value={{title.id}}/>
+                        <td class="title-cell" data-title-id="{{ title.id }}">
+                            <span class="text-content">{{ title.title }}</span>
+                        </td>
+                        <td>
+                            <select name="annotate[]">
+                                <option value="-1">Negative</option>
+                                <option value="0">Neutral</option>
+                                <option value="1">Positive</option>
+                            </select>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <button type="submit">Submit Answers</button>
+        </form>
+    </div>
+</div>
+
+
+
+
+</body>
+</html> -->
