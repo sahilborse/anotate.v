@@ -14,7 +14,3 @@ class AnnotationForm(forms.ModelForm):
             'annotate': forms.Select(choices=Annotation.ANNOTATE_CHOICES),   
         }
 
-# class TextSelectionForm(forms.ModelForm):
-#     class Meta:
-#         model = SelectedText 
-#         fields = ['title_id','selected_text']

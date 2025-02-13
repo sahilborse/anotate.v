@@ -22,14 +22,7 @@ class Annotation(models.Model):
     def __str__(self):
         return f"title_id: {self.title_id}, User: {self.user.username}, Annotate: {self.annotate}"
     
-# class SelectedText(models.Model):
-#     title_id = models.IntegerField()
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     selected_text=models.CharField(max_length=255)
-
-#     def __str__(self):
-#         return  f"title_id: {self.title_id}, User: {self.user.username}, HighlightedText: {self.selected_text}"
-    
+ 
 
 class HighlightedText(models.Model):
     title_id = models.IntegerField()  # Store only the title ID instead of a ForeignKey
