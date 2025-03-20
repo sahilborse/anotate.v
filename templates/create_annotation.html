@@ -127,6 +127,7 @@
                         <!--</td>-->
                         <td>
                             <select name="annotate[]">
+                                <option value="" disabled selected>Select</option>
                                 <option value="-1">Negative</option>
                                 <option value="0">Neutral</option>
                                 <option value="1">Positive</option>
@@ -194,6 +195,18 @@
         console.log([...formData.entries()]);
 
     });
+
+    document.getElementById('questionForm').addEventListener('submit', function (e) {
+        const selects = document.querySelectorAll('select[name="annotate[]"]');
+        for (const select of selects) {
+            if (select.value === "") {
+                alert("Please select an annotation for each question before submitting!");
+                e.preventDefault();  // Stop form submission
+                return false;
+            }
+        }
+    });
+
 </script>
 <script>
    document.querySelectorAll(".title-cell").forEach(cell => {
