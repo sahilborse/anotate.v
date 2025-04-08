@@ -3,9 +3,13 @@ from django.contrib.auth.models import User
 
 class DataEntry(models.Model):
     title = models.CharField(max_length=255)  
+    annotate = models.IntegerField(choices=[(-1, 'Negative'), (0, 'Neutral'), (1, 'Positive')])
+
+
+    
 
     def __str__(self) -> str:
-        return f"ID: {self.id}, Title: {self.title}"
+        return f"ID: {self.id}, Title: {self.title},Anotate:{self.annotate}"
 
 
 class Annotation(models.Model):
@@ -13,7 +17,7 @@ class Annotation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # ForeignKey to the logged-in user
     ANNOTATE_CHOICES = [
         (-1, 'Negative'),
-        (0, 'Neutral'),
+        (0, 'Neutral'),                     
         (1, 'Positive'),
     ]
     annotate = models.IntegerField(choices=ANNOTATE_CHOICES)

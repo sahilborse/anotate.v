@@ -8,28 +8,89 @@ import random
 from .models import DataEntry, Annotation, HighlightedText
 from django.contrib.auth.decorators import login_required
 ################################### File route and Upload #######################
+import io
+
 
 
 def handle_uploaded_file(file):
-   
     data = []
-    
+
+    def extract_label_fallback(row):
+        """Try to find -1, 0, or 1 in any value of the row."""
+        print("extraction called")
+        for val in row.values():
+            if val:
+                try:
+                    v = int(str(val).strip())
+                    if v in [-1, 0, 1]:
+                        return v
+                except:
+                    continue
+        return None
+
     if file.name.endswith('.csv'):
-        # Process CSV file
-        decoded_file = file.read().decode('utf-8').splitlines()
-        reader = csv.reader(decoded_file)
-        next(reader)  # Skip the header row
+        wrapper = io.TextIOWrapper(file.file, encoding='utf-8', errors='ignore')
+        reader = csv.DictReader(wrapper)
+
+        # Normalize header keys
+        reader.fieldnames = [h.strip().lower() for h in reader.fieldnames]
+
         for row in reader:
-            data.append(row[0])  # Assuming the first column contains the title
+            try:
+                row = {k.strip().lower(): v for k, v in row.items() if k}
+
+                title = row.get('title', '').strip()
+                label = row.get('label', '').strip()
+
+                if label not in ['-1', '0', '1']:
+                    raise ValueError("Invalid or missing label")
+                if(title==''):continue
+                data.append({'title': title, 'annotate': int(label)})
+
+            except Exception as e:
+                fallback_label = extract_label_fallback(row)
+                print("fallback_label", row)
+                if fallback_label is not None:
+                    full_title = ' '.join([str(v).strip() for v in row.values() if v])
+                    if(full_title == ' '):continue
+                    data.append({'title': full_title, 'annotate': fallback_label})
+                    print({"full_title": full_title, "annotate": fallback_label})
+                else:
+                    print(f"Skipping row due to error: {e}, Row: {row}")
+
     elif file.name.endswith('.xlsx'):
-        # Process XLSX file
         wb = openpyxl.load_workbook(file)
         sheet = wb.active
-        for row in sheet.iter_rows(min_row=2, values_only=True):  # Skipping the header row
-            data.append(row[0])  # Assuming the first column contains the title
+
+        headers = [str(cell.value).strip().lower() for cell in sheet[1]]
+        title_idx = headers.index('title') if 'title' in headers else None
+        label_idx = headers.index('label') if 'label' in headers else None
+
+        for row in sheet.iter_rows(min_row=2, values_only=True):
+            try:
+                row_dict = {headers[i]: row[i] for i in range(len(headers)) if headers[i]}
+
+                title = row_dict.get('title', '').strip()
+                label = str(row_dict.get('label', '')).strip()
+                
+                if(title==''):continue
+
+                if label not in ['-1', '0', '1']:
+                    raise ValueError("Invalid or missing label")
+
+                data.append({'title': title, 'annotate': int(label)})
+
+            except Exception as e:
+                fallback_label = extract_label_fallback(row_dict)
+                if fallback_label is not None:
+                    full_title = ' '.join([str(v).strip() for v in row_dict.values() if v])
+                    data.append({'title': full_title, 'annotate': fallback_label})
+                    
+                else:
+                    print(f"Skipping XLSX row due to error: {e}, Row: {row_dict}")
     else:
         raise ValueError("Unsupported file format. Please upload a CSV or XLSX file.")
-    
+    # print(data)
     return data
 
 def upload_file(request):
@@ -41,13 +102,17 @@ def upload_file(request):
 
             try:
                 # Process the file to extract titles
-                titles = handle_uploaded_file(file)
-
+                entries = handle_uploaded_file(file)
+              
                 # Save each title to the DataEntry model
-                for title in titles:
-                    DataEntry.objects.create(title=title)  # Add other fields as necessary
+                # Inside upload_file function:
+                for entry in entries:
+                #     print(entry, "\n")
+                    DataEntry.objects.create(title=entry['title'], annotate=entry['annotate'])
+                    # Add other fields as necessary
 
-                return redirect('home')  # Redirect to a success page
+                # return redirect('home')  # Redirect to a success page
+                return redirect('upload_file')
             except ValueError as e:
                 return render(request, 'upload.html', {'form': form, 'error': str(e)})
 

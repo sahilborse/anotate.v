@@ -127,10 +127,10 @@
                         <!--</td>-->
                         <td>
                             <select name="annotate[]">
-                                <option value="" disabled selected>Select</option>
-                                <option value="-1">Negative</option>
-                                <option value="0">Neutral</option>
-                                <option value="1">Positive</option>
+                                <option value="" disabled {% if title.annotate is None %}selected{% endif %}>Select</option>
+                                <option value="-1" {% if title.annotate == -1 %}selected{% endif %}>Negative</option>
+                                <option value="0" {% if title.annotate == 0 %}selected{% endif %}>Neutral</option>
+                                <option value="1" {% if title.annotate == 1 %}selected{% endif %}>Positive</option>
                             </select>
                         </td>
                     </tr>

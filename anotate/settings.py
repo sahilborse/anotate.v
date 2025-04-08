@@ -25,7 +25,12 @@ SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # apply site url when site is hosted here in [] brackets.
-DEBUG =config('DEBUG', cast=bool, default=False)
+
+
+# DEBUG =config('DEBUG', cast=bool, default=False)
+
+DEBUG = True
+
 ALLOWED_HOSTS = ['*']
 
 
@@ -137,6 +142,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # settings.py
 LOGIN_REDIRECT_URL = '/'  # Redirect to home page after login
 
+# Allow large file uploads
+DATA_UPLOAD_MAX_MEMORY_SIZE = 104857600  # 100MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 104857600  # 100MB
 
 
 # Default primary key field type
